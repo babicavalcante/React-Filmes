@@ -1,6 +1,6 @@
 const { default: axios } = require("axios");
 
-const apiMovie = axios.create({
+const apiMovies = axios.create({
     baseURL: 'https://api.themoviedb.org/3',
     params: {
         language: 'pt-BR'
@@ -10,4 +10,4 @@ const apiMovie = axios.create({
     }
 })
 
-export default apiMovie
+export default apiMovies

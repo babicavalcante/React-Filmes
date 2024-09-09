@@ -11,12 +11,12 @@ export default function Pagina(props) {
                         <Nav.Link href="/series">Séries</Nav.Link>
                         <Nav.Link href="/atores">Atores</Nav.Link>
                         <NavDropdown title="Filmes" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="/disney">
+                            <NavDropdown.Item href="/filmes">
                                Populares
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item href="/disney/cards">
-                               Em cartaz
+                            <NavDropdown.Item href="/filmes">
+                               Detalhes
                             </NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item href="/disney/tabela">

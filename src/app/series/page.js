@@ -1,47 +1,46 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
-import Pagina from '../components/Pagina';
-import apiMovies from '../services/apiMovies';
+import Pagina from "@/app/components/Pagina";
+import { useEffect, useState } from "react";
+import apiMovies from "@/app/services/apiMovies";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import Link from "next/link";
 
-export default function Filmes() {
+export default function Page() {
 
-    const [series, setSeries] = useState([]);
+    const [series, setSeries] = useState([])
 
     useEffect(() => {
         apiMovies.get('tv/popular').then(resultado => {
-            setSeries(resultado.data.results);
-
+            setSeries(resultado.data.results)
         })
     }, [])
 
     return (
-        <Pagina titulo="Series">
+        <Pagina titulo="Séries">
+
             <Row md={3}>
-                {series.map((item) => (
-                    <Col key={item.id} className="p-4">
-                        <Card style={{ height: '100%' }}> {/* Define a mesma altura para todos os cards */}
-                            <div style={{ height: '300px', overflow: 'hidden' }}> {/* Define uma altura fixa para a imagem */}
-                                <Card.Img
-                                    variant="top"
-                                    src={'https://image.tmdb.org/t/p/w500/' + item.backdrop_path}
-                                    className="img-fluid"
-                                    style={{ height: '100%', objectFit: 'cover' }}
-                                />
-                            </div>
+                {series.map(item => (
+                    <Col key={item.id} className="mt-3">
+                        <Card>
+                            <Card.Img height={150} variant="top" src={'https://image.tmdb.org/t/p/w500/' + item.backdrop_path} />
                             <Card.Body>
                                 <Card.Title>{item.name}</Card.Title>
-                                <Card.Text>
-                                    <p>{item.name}</p>
-                                    <p>Popularidade: {item.popularity}</p>
-                                </Card.Text>
-                                <Button href={`/series/${item.id}`} variant="danger">Ver Detalhes</Button>
+                                <Card.Text>{item.original_name}</Card.Text>
+                                <Card.Text>Popularidade: {item.popularity}</Card.Text>
+                                <Link className="btn btn-danger" href={`/series/${item.id}`}>
+                                    Detalhes
+                                </Link>
                             </Card.Body>
                         </Card>
                     </Col>
                 ))}
             </Row>
+
+            {series.map(item => (
+                <p>{item.title}</p>
+            ))}
+
         </Pagina>
     )
 }

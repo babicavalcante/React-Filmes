@@ -1,84 +1,63 @@
 'use client'
 
-import Pagina from '@/app/components/Pagina';
-import apiMovies from '@/app/services/apiMovies';
-import { useEffect, useState } from 'react';
-import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
+import Pagina from "@/app/components/Pagina";
+import { useEffect, useState } from "react";
+import apiMovies from "@/app/services/apiMovies";
+import { Col, Row } from "react-bootstrap";
+import Link from "next/link";
 
 export default function Page({ params }) {
 
-    const [series, SetSeries] = useState({});
-    const [ator, setAtor] = useState([]);
-    const [temp, setTemp] = useState([]);
+    const [serie, setSerie] = useState({})
+    const [atores, setAtores] = useState([])
 
     useEffect(() => {
         apiMovies.get(`tv/${params.id}`).then(resultado => {
-            SetSeries(resultado.data);
-
+            setSerie(resultado.data)
         })
-    }, [])
 
-    useEffect(() => {
         apiMovies.get(`tv/${params.id}/credits`).then(resultado => {
-            setAtor(resultado.data.cast);
-
+            setAtores(resultado.data.cast)
         })
     }, [])
-
-    useEffect(() => {
-        apiMovies.get(`tv/${params.id}`).then(resultado => {
-            setTemp(resultado.data.seasons);
-
-        })
-    }, [])
-
 
     return (
-        <Pagina titulo="Series Detalhes">
-
-            <h1 className='mt-5'><p>{series.title}</p></h1>
-            <Row md={3}>
-                <Col key={series.id}>
-                    <img style={{ width: '100%' }} src={'https://image.tmdb.org/t/p/w500/' + series.poster_path} />
-                </Col>
-                <Col md={8}>
-                    <p><b>Titulo Original: </b>{series.original_title}</p>
-                    <p><b>Popularidade: </b>{series.popularity}</p>
-                    <p><b>Data de Lançamento: </b>{series.release_date}</p>
-                    <p><b>Orçamento: </b>{series.revenue}</p>
-                    <p><b>Gêneros: </b> {series.genres && series.genres.map(genero => genero.name).join(', ')}</p>
-                    <p><b>Sinopse: </b>{series.overview}</p>
-
-                    <Button href='/series' variant="danger">Voltar</Button>
-
-                </Col>
-            </Row>
-
-            <h1 className='mt-5'>Temporadas</h1>
-            <Row md={6}>
-
-                {temp.map(item => (
-                    <Col className=' mb-3' >
-
-                        <img style={{ width: '100%' }} src={'https://image.tmdb.org/t/p/w500/' + item.poster_path} />
-
+        <Pagina titulo={serie.name}>
+            {
+                serie.id &&
+                <Row className="mt-3">
+                    <Col sm={4}>
+                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + serie.poster_path} />
                     </Col>
-
-                ))}
-
-            </Row>
-            <h1 className='mt-5'>Atores</h1>
-            <Row md={6}>
-
-                {ator.map(item => (
-                    <Col className=' mb-3' >
-
-                        <img style={{ width: '100%' }} src={'https://image.tmdb.org/t/p/w500/' + item.profile_path} />
-
+                    <Col sm={8}>
+                        <p><b>Título original: </b>{serie.original_name}</p>
+                        <p><b>Popularidade: </b>{serie.popularity}</p>
+                        <p><b>Data de Lançamento: </b>{serie.release_date}</p>
+                        <p><b>Orçamento: </b>{serie.budget}</p>
+                        <p><b>Gêneros: </b>
+                            {serie.genres.map(item => item.name).join(', ')}
+                        </p>
+                        <p><b>Sinopse: </b>{serie.overview}</p>
                     </Col>
-
-                ))}
-            </Row>
+                    <Col sm={12}>
+                        <h1>Atores</h1>
+                        <Row>
+                            {atores.map(item => (
+                                <Col
+                                    key={item.id}
+                                    title={item.name}
+                                    className="mb-3"
+                                    sm={2}
+                                >
+                                    <Link href={`/atores/${item.id}`}>
+                                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + item.profile_path} />
+                                    </Link>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+                </Row>
+            }
         </Pagina>
     )
 }

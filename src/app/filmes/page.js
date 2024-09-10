@@ -1,46 +1,46 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
-import apiMovies from '../services/apiMovies';
-import Pagina from '../components/Pagina';
+import Pagina from "@/app/components/Pagina";
+import { useEffect, useState } from "react";
+import { Button, Card, Col, Row } from "react-bootstrap";
+import Link from "next/link";
+import apiMovies from "@/app/services/apiMovies";
 
-export default function Filmes() {
+export default function Page() {
 
-    const [filmes, setFilmes] = useState([]);
+    const [filmes, setFilmes] = useState([])
 
     useEffect(() => {
         apiMovies.get('movie/popular').then(resultado => {
-            setFilmes(resultado.data.results);
+            setFilmes(resultado.data.results)
         })
     }, [])
 
     return (
-        <Pagina titulo="filmes">
+        <Pagina titulo="Filmes">
+
             <Row md={3}>
-                {filmes.map((item) => (
-                    <Col key={item.id} className="p-4">
-                        <Card style={{ height: '100%' }}> {/* Define a mesma altura para todos os cards */}
-                            <div style={{ height: '300px', overflow: 'hidden' }}> {/* Define uma altura fixa para a imagem */}
-                                <Card.Img 
-                                    variant="top" 
-                                    src={'https://image.tmdb.org/t/p/w500/' + item.backdrop_path} 
-                                    className="img-fluid" 
-                                    style={{ height: '100%', objectFit: 'cover' }} 
-                                />
-                            </div>
+                {filmes.map(item => (
+                    <Col key={item.id} className="mt-3">
+                        <Card>
+                            <Card.Img height={150} variant="top" src={'https://image.tmdb.org/t/p/w500/' + item.backdrop_path} />
                             <Card.Body>
                                 <Card.Title>{item.title}</Card.Title>
-                                <Card.Text>
-                                    <p>{item.title}</p>
-                                    <p>Popularidade: {item.popularity}</p>
-                                </Card.Text> 
-                                <Button href={`/filmes/${item.id}`} variant="danger">Ver Detalhes</Button>
+                                <Card.Text>{item.original_title}</Card.Text>
+                                <Card.Text>Popularidade: {item.popularity}</Card.Text>
+                                <Link className="btn btn-danger" href={`/filmes/${item.id}`}>
+                                    Detalhes
+                                </Link>
                             </Card.Body>
                         </Card>
                     </Col>
                 ))}
             </Row>
+
+            {filmes.map(item => (
+                <p>{item.title}</p>
+            ))}
+
         </Pagina>
     )
 }

@@ -1,66 +1,64 @@
 'use client'
 
-import Pagina from '@/app/components/Pagina';
-import apiMovies from '@/app/services/apiMovies';
-import { useEffect, useState } from 'react';
-import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
+import Pagina from "@/app/components/Pagina";
+import { useEffect, useState } from "react";
+import apiMovie from "@/app/services/apiMovies";
+import { Col, Row } from "react-bootstrap";
+import Link from "next/link";
 
 export default function Page({ params }) {
 
-    const [filme, setFilme] = useState({});
-    const [ator, setAtor] = useState([]);
+    const [filme, setFilme] = useState({})
+    const [atores, setAtores] = useState([])
 
     useEffect(() => {
-        apiMovies.get(`movie/${params.id}`).then(resultado => {
-            setFilme(resultado.data);
+        apiMovie.get(`movie/${params.id}`).then(resultado => {
+            setFilme(resultado.data)
+        })
 
+        apiMovie.get(`movie/${params.id}/credits`).then(resultado => {
+            setAtores(resultado.data.cast)
         })
     }, [])
-
-    useEffect(() => {
-        apiMovies.get(`movie/${params.id}/credits`).then(resultado => {
-            setAtor(resultado.data.cast);
-
-        })
-    }, [])
-
 
     return (
-        <Pagina titulo="Filmes Detalhes">
-             
-             <h1 className='mt-5'><p>{filme.title}</p></h1>
-            <Row md={3}>
-                <Col  key={filme.id}>
-                <img style={{ width: '100%'}} src={'https://image.tmdb.org/t/p/w500/' + filme.poster_path}/>
-                </Col>
-                <Col md={8}>
-                <p><b>Titulo Original: </b>{filme.original_title}</p>
-                <p><b>Popularidade: </b>{filme.popularity}</p>
-                <p><b>Data de Lançamento: </b>{filme.release_date}</p>
-                <p><b>Orçamento: </b>{filme.revenue}</p>
-                <p><b>Gêneros: </b> {filme.genres && filme.genres.map(genero => genero.name).join(', ')}</p>
-                <p><b>Sinopse: </b>{filme.overview}</p>
-
-                <Button href='/filmes' variant="danger">Voltar</Button>
-                
-                </Col>
-
-            </Row>
-            <h1 className='mt-5'>Atores</h1>
-            <Row md={6}>
-                
-                {ator.map(item=>(
-                 <Col className= ' mb-3' >
-                 
-                 <img style={{ width: '100%'}} src={'https://image.tmdb.org/t/p/w500/' + item.profile_path}/>
-                 
-                 </Col>
-                
-                ))}
-
-            </Row>
+        <Pagina titulo={filme.title}>
+            {
+                filme.id &&
+                <Row className="mt-3">
+                    <Col sm={4}>
+                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + filme.poster_path} />
+                    </Col>
+                    <Col sm={8}>
+                        <p><b>Título original: </b>{filme.original_title}</p>
+                        <p><b>Popularidade: </b>{filme.popularity}</p>
+                        <p><b>Data de Lançamento: </b>{filme.release_date}</p>
+                        <p><b>Orçamento: </b>{filme.budget}</p>
+                        <p><b>Gêneros: </b>
+                            {filme.genres.map(item => item.name).join(', ')}
+                        </p>
+                        <p><b>Sinopse: </b>{filme.overview}</p>
+                    </Col>
+                    <Col sm={12}>
+                        <h1>Atores</h1>
+                        <Row>
+                            {atores.map(item => (
+                                <Col
+                                    key={item.id}
+                                    title={item.name}
+                                    className="mb-3"
+                                    sm={2}
+                                >
+                                    <Link href={`/atores/${item.id}`}>
+                                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + item.profile_path} />
+                                    </Link>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+                </Row>
+            }
         </Pagina>
     )
 }
-
 

@@ -1,10 +1,10 @@
 'use client'
 
+import Pagina from "@/app/components/Pagina";
 import { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import Link from "next/link";
 import apiMovies from "@/app/services/apiMovies";
-import Pagina from "@/app/components/Pagina";
 
 export default function Page({ params }) {
 
